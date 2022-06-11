@@ -109,9 +109,8 @@ export function Web3Provider({ children }: Web3ProviderProps) {
   };
 
   const autoConnect = async () => {
-    // TODO not working :(
     if (web3Modal?.cachedProvider) {
-      await web3Modal.connect();
+      connectWallet();
     }
   };
 
