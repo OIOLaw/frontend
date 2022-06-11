@@ -7,6 +7,7 @@ import TrustItem from "../src/components/TrustItem";
 import Link from "next/link";
 import CenteredText from "../src/components/CenteredText";
 import { Plus } from "tabler-icons-react";
+import CreateTrustButton from "../src/components/Buttons/CreateTrustButton";
 
 const Home: NextPage = () => {
   const { wallet, trusts } = useWeb3();
@@ -29,6 +30,7 @@ const Home: NextPage = () => {
               <CenteredText>
                 <Title>No trusts created</Title>
                 <Text>Create your first trust using the button below</Text>
+                <CreateTrustButton />
               </CenteredText>
             ) : (
               <>
@@ -39,11 +41,7 @@ const Home: NextPage = () => {
                     justifyContent: "flex-end",
                   }}
                   my="md">
-                  <Link href="/create" passHref>
-                    <Button leftIcon={<Plus />} component="a">
-                      Create a new trust
-                    </Button>
-                  </Link>
+                  <CreateTrustButton />
                 </Box>
                 {myTrusts?.map((metadata) => (
                   <TrustItem metadata={metadata} key={metadata.id} />
