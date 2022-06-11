@@ -4,6 +4,7 @@ import {
   Card,
   Center,
   Grid,
+  Group,
   RingProgress,
   Table,
   Text,
@@ -12,12 +13,19 @@ import {
 } from "@mantine/core";
 import Link from "next/link";
 import { FC } from "react";
-import { Check, Lock } from "tabler-icons-react";
+import { Check, Lock, LockOpen } from "tabler-icons-react";
 import { useWeb3 } from "../providers/Web3Provider";
+import { calculateLastInstallmentDate } from "../utils/contractMath";
 import AddressDisplay from "./AddressDisplay";
 import TokenIcon from "./TokenIcon";
 
 const TrustItem: FC<{ metadata: any }> = ({ metadata }) => {
+  const lastInstallmentDate = calculateLastInstallmentDate(
+    new Date(metadata.start_time * 1000),
+    metadata.frequency_in_days,
+    metadata.tokens
+  );
+
   return (
     <Card mb="lg" shadow="sm" p="0">
       <Card.Section>
@@ -29,12 +37,24 @@ const TrustItem: FC<{ metadata: any }> = ({ metadata }) => {
                 Recipient:
               </Text>
               <AddressDisplay address={metadata.owner} />
-              <Text size="sm" color="dimmed" mt="xs">
-                Start time:
-              </Text>
-              <Text weight={500} size="sm">
-                {new Date(metadata.start_time * 1000).toLocaleString()}
-              </Text>
+              <Group>
+                <Box sx={{ flex: 1 }}>
+                  <Text size="sm" color="dimmed" mt="xs">
+                    Start date:
+                  </Text>
+                  <Text weight={500} size="sm">
+                    {new Date(metadata.start_time * 1000).toLocaleDateString()}
+                  </Text>
+                </Box>
+                <Box sx={{ flex: 1 }}>
+                  <Text size="sm" color="dimmed" mt="xs">
+                    End date:
+                  </Text>
+                  <Text weight={500} size="sm">
+                    {lastInstallmentDate.toLocaleDateString()}
+                  </Text>
+                </Box>
+              </Group>
               <Text size="sm" color="dimmed" mt="xs">
                 Installment frequency:
               </Text>
@@ -45,11 +65,25 @@ const TrustItem: FC<{ metadata: any }> = ({ metadata }) => {
           </Box>
           <Box p="lg">
             <RingProgress
-              sections={[{ value: 100, color: "blue" }]}
+              sections={[
+                {
+                  value:
+                    100 -
+                    ((new Date().getTime() / 1000 - metadata.start_time) /
+                      (lastInstallmentDate.getTime() / 1000 -
+                        metadata.start_time)) *
+                      100,
+                  color: "blue",
+                },
+              ]}
               label={
                 <Center>
                   <ThemeIcon color="blue" variant="light" radius="xl" size="xl">
-                    <Lock size={22} />
+                    {+new Date() / 1000 > metadata.start_time ? (
+                      <LockOpen size={22} />
+                    ) : (
+                      <Lock size={22} />
+                    )}
                   </ThemeIcon>
                 </Center>
               }

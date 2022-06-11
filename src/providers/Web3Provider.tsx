@@ -192,9 +192,9 @@ export function Web3Provider({ children }: Web3ProviderProps) {
 
   const loadTrusts = useCallback(async () => {
     if (!contract) return [];
-    const count = await contract.totalSupply();
 
     try {
+      const count = await contract.totalSupply();
       // For each trust, get the details
       const promises = [];
       for (let i = 0; i < count; i++) {
