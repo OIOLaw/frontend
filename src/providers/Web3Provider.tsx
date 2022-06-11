@@ -1,4 +1,4 @@
-import React, { Children, useEffect, useState } from "react";
+import React, { Children, useCallback, useEffect, useState } from "react";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { genericErrorNotify, notify } from "../utils/notify";
@@ -6,6 +6,7 @@ import { BaseProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
 import { hexToDecimal, truncateAddress } from "../utils/utility";
 import OIOTrust_abi from "../abi/OIOTrust.json";
+import ERC20_abi from "../abi/IERC20.json";
 
 interface Web3ProviderProps {
   children?: React.ReactNode;
@@ -24,7 +25,7 @@ interface Web3ContextType {
   disconnectWallet?: () => void;
   createTrust?: () => void;
   depositToken?: () => void;
-  loadTrusts?: () => Promise<any[]>;
+  trusts?: any[];
   wallet?: WalletType;
 }
 
@@ -167,8 +168,10 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     };
   }, [wallet]);
 
-  const loadTrusts = async () => {
-    if (!contract) return;
+  const [trusts, setTrusts] = useState<any[]>();
+
+  const loadTrusts = useCallback(async () => {
+    if (!contract) return [];
     const count = await contract.totalSupply();
 
     // For each trust, get the details
@@ -178,11 +181,17 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     }
 
     const resolved = await Promise.all(promises);
-    return resolved.map((metadataURI) => {
+    const newTrusts = resolved.map((metadataURI) => {
       const metadata = JSON.parse(atob(metadataURI.split(",")[1]));
       return metadata;
     });
-  };
+    setTrusts(newTrusts);
+  }, [contract]);
+
+  useEffect(() => {
+    loadTrusts();
+  }, [loadTrusts, contract]);
+
   const createTrust = async () => {
     if (!contract) return;
     try {
@@ -193,26 +202,38 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       );
       await tx.wait();
       notify("Success", "Trust created successfully!", "success");
+      loadTrusts();
     } catch (e) {
       console.log(e);
       genericErrorNotify(e, "Error creating trust", false);
     }
   };
   const depositToken = async () => {
-    if (!contract) return;
+    if (!contract || !wallet) return;
     try {
       const tokenId = 0;
-      const erc20Address = "";
-      const amount = "";
-      const installmentAmount = "";
-      const tx = await contract.deposit(
-        tokenId,
+      const erc20Address = "0x0dcd1bf9a1b36ce34237eeafef220932846bcd82";
+      const amount = 1e18;
+      const installmentAmount = 1e17;
+      const tokenContract = new ethers.Contract(
         erc20Address,
-        amount,
-        installmentAmount
+        ERC20_abi.abi,
+        wallet.library.getSigner(wallet.address)
       );
-      await tx.wait();
+      const tx1 = await tokenContract.approve(
+        contract.address,
+        amount.toString()
+      );
+      await tx1.wait();
+      const tx2 = await contract.deposit(
+        tokenId.toString(),
+        erc20Address,
+        amount.toString(),
+        installmentAmount.toString()
+      );
+      await tx2.wait();
       notify("Success", "Token deposited successfully!", "success");
+      loadTrusts();
     } catch (e) {
       console.log(e);
       genericErrorNotify(e, "Error depositing token", false);
@@ -227,7 +248,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         disconnectWallet,
         createTrust,
         depositToken,
-        loadTrusts,
+        trusts,
       }}>
       {children}
     </Web3Context.Provider>

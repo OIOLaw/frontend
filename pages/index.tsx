@@ -12,14 +12,8 @@ const Home: NextPage = () => {
     wallet,
     depositToken,
     createTrust,
-    loadTrusts,
+    trusts,
   } = useWeb3();
-  const [trusts, setTrusts] = useState<any[]>();
-
-  useEffect(() => {
-    if (!loadTrusts) return;
-    loadTrusts().then(setTrusts).catch(console.log);
-  }, [loadTrusts]);
 
   return (
     <>
