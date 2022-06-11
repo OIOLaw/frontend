@@ -13,6 +13,7 @@ import { Logo } from "./Logo/Logo";
 import { useWeb3 } from "../providers/Web3Provider";
 import { truncateAddress } from "../utils/utility";
 import { AlertCircle } from "tabler-icons-react";
+import AddressDisplay from "./AddressDisplay";
 
 const Header: FC = () => {
   const { connectWallet, disconnectWallet, wallet } = useWeb3();
@@ -34,11 +35,7 @@ const Header: FC = () => {
 
             {wallet ? (
               <>
-                <Box>
-                  <Code title={wallet.address}>
-                    {truncateAddress(wallet.address)}
-                  </Code>
-                </Box>
+                <AddressDisplay address={wallet.address} />
                 <Button
                   onClick={() => disconnectWallet?.call(this)}
                   variant="default">

@@ -11,6 +11,7 @@ import {
 import Link from "next/link";
 import { FC } from "react";
 import { useWeb3 } from "../providers/Web3Provider";
+import AddressDisplay from "./AddressDisplay";
 
 const TrustItem: FC<{ metadata: any }> = ({ metadata }) => {
   return (
@@ -18,12 +19,22 @@ const TrustItem: FC<{ metadata: any }> = ({ metadata }) => {
       <Box sx={{ display: "flex", flexDirection: "row" }}>
         <Box sx={{ flex: "1" }}>
           <Box p="lg">
-            <Title>Trust ID #{metadata.id}</Title>
-            <Text>
-              Start time: {new Date(metadata.start_time).toLocaleString()}
+            <Title>Trust #{metadata.id}</Title>
+            <Text size="sm" color="dimmed">
+              Recipient:
             </Text>
-            <Text>
-              Installment frequency: {metadata.frequency_in_days} days
+            <AddressDisplay address={metadata.owner} />
+            <Text size="sm" color="dimmed">
+              Start time:
+            </Text>
+            <Text weight={500} size="sm">
+              {new Date(metadata.start_time).toLocaleString()}
+            </Text>
+            <Text size="sm" color="dimmed" mt="xs">
+              Installment frequency:
+            </Text>
+            <Text weight={500} size="sm">
+              {metadata.frequency_in_days} days
             </Text>
           </Box>
           <Table ml="sm" mr="lg" mb="lg">
@@ -32,7 +43,10 @@ const TrustItem: FC<{ metadata: any }> = ({ metadata }) => {
                 <tr key={i}>
                   <td>{token.name}</td>
                   <td>
-                    {token.amount / Math.pow(10, token.decimals)} {token.ticker}
+                    <b>
+                      {token.amount / Math.pow(10, token.decimals)}{" "}
+                      {token.ticker}
+                    </b>
                   </td>
                 </tr>
               ))}

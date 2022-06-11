@@ -200,12 +200,14 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       for (let i = 0; i < count; i++) {
         promises.push(contract.tokenURI(i));
       }
-      const resolved = await Promise.all(promises);
-      const newTrusts = resolved.map((metadataURI, id) => {
-        const metadata = JSON.parse(atob(metadataURI.split(",")[1]));
+      const resolveMetadata = promises.map(async (metadataURI, id) => {
+        const returnedURI = await metadataURI;
+        const metadata = JSON.parse(atob(returnedURI.split(",")[1]));
         metadata.id = id;
+        metadata.owner = await contract.ownerOf(id);
         return metadata;
       });
+      const newTrusts = await Promise.all(resolveMetadata);
       setTrusts(newTrusts);
     } catch (error) {
       console.log(error);
