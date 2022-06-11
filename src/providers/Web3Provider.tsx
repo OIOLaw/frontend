@@ -34,6 +34,11 @@ interface Web3ContextType {
     amount: number,
     installmentAmount: number
   ) => void;
+  withdrawToken?: (
+    tokenId: number,
+    erc20Address: string,
+    amount: number
+  ) => void;
   updateTrust?: (
     trustId: string,
     startTime: number,
@@ -258,6 +263,26 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       genericErrorNotify(e, "Error depositing token", false);
     }
   };
+  const withdrawToken = async (
+    tokenId: number,
+    erc20Address: string,
+    amount: number
+  ) => {
+    if (!contract || !wallet) return;
+    try {
+      const tx = await contract.withdraw(
+        tokenId.toString(),
+        erc20Address,
+        amount.toString()
+      );
+      await tx.wait();
+      notify("Success", "Token withdrawn successfully!", "success");
+      loadTrusts();
+    } catch (e) {
+      console.log(e);
+      genericErrorNotify(e, "Error withdrawing token", false);
+    }
+  };
   const updateTrust = async (
     trustId: string,
     startTime: number,
@@ -287,6 +312,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         disconnectWallet,
         createTrust,
         depositToken,
+        withdrawToken,
         updateTrust,
         trusts,
       }}>
