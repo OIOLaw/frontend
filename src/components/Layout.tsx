@@ -11,7 +11,6 @@ const Layout: FC<{
         <div className={styles["layout"]}>
             <Header/>
             <Container className={styles["container"]}>{children}</Container>
-            <div style={{flexGrow: 1}}/>
             <Footer/>
         </div>
     )

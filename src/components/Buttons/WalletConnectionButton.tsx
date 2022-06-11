@@ -15,7 +15,7 @@ const WalletConnectionButton: FC = () => {
                     </Button>
                 </>
             ):(
-                <Button onClick={() => connectWallet?.call(this)}>
+                <Button onClick={() => connectWallet?.call(this)} gradient={{ from: 'teal', to: 'blue', deg: 60 }}>
                     Connect Wallet
                 </Button>
             )}

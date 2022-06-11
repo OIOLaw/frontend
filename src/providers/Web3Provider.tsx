@@ -194,19 +194,23 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     if (!contract) return [];
     const count = await contract.totalSupply();
 
-    // For each trust, get the details
-    const promises = [];
-    for (let i = 0; i < count; i++) {
-      promises.push(contract.tokenURI(i));
+    try {
+      // For each trust, get the details
+      const promises = [];
+      for (let i = 0; i < count; i++) {
+        promises.push(contract.tokenURI(i));
+      }
+      const resolved = await Promise.all(promises);
+      const newTrusts = resolved.map((metadataURI, id) => {
+        const metadata = JSON.parse(atob(metadataURI.split(",")[1]));
+        metadata.id = id;
+        return metadata;
+      });
+      setTrusts(newTrusts);
+    } catch (error) {
+      console.log(error);
+      setTrusts([]);
     }
-
-    const resolved = await Promise.all(promises);
-    const newTrusts = resolved.map((metadataURI, id) => {
-      const metadata = JSON.parse(atob(metadataURI.split(",")[1]));
-      metadata.id = id;
-      return metadata;
-    });
-    setTrusts(newTrusts);
   }, [contract]);
 
   useEffect(() => {
