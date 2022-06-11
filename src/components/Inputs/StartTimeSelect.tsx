@@ -22,7 +22,12 @@ const useStyles = createStyles((theme) => ({
     },
 }));
 
-const StartTimeSelect: FC = () => {
+interface IStartTimeSelect {
+    startTime: Date | null
+    setStartTime: React.Dispatch<React.SetStateAction<Date | null>>
+}
+
+const StartTimeSelect: FC<IStartTimeSelect> = ({startTime, setStartTime}) => {
     // You can add these classes as classNames to any Mantine input, it will work the same
     const { classes } = useStyles();
 
@@ -34,6 +39,8 @@ const StartTimeSelect: FC = () => {
                 placeholder="When do you want assets to be sent?"
                 classNames={classes}
                 clearable={false}
+                value={startTime}
+                onChange={setStartTime}
             />
         </div>
     );
