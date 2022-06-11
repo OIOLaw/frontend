@@ -31,5 +31,9 @@
     "eslint-config-next": "12.1.6",
     "sass": "^1.52.3",
     "typescript": "4.7.3"
+  },
+  "overrides": {
+    "ethereumjs-abi": "https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz",
+    "ethereumjs-abi@git+https://github.com/ethereumjs/ethereumjs-abi.git": "https://registry.npmjs.org/ethereumjs-abi/-/ethereumjs-abi-0.6.8.tgz"
   }
 }

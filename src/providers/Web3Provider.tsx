@@ -194,18 +194,58 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     if (!contract) return [];
     const count = await contract.totalSupply();
 
-    // For each trust, get the details
-    const promises = [];
-    for (let i = 0; i < count; i++) {
-      promises.push(contract.tokenURI(i));
+    try {
+      // For each trust, get the details
+      const promises = [];
+      for (let i = 0; i < count; i++) {
+        promises.push(contract.tokenURI(i));
+      }
+      const resolveMetadata = promises.map(async (metadataURI, id) => {
+        const returnedURI = await metadataURI;
+        const metadata = JSON.parse(atob(returnedURI.split(",")[1]));
+        metadata.id = id;
+        metadata.owner = await contract.ownerOf(id);
+        return metadata;
+      });
+      // const newTrusts = await Promise.all(resolveMetadata);
+      const newTrusts = [
+        {
+          creator: "0xcdbc5b7f658687e6ace363ee3dff9a71a97f3fd3",
+          start_time: 1655386777,
+          frequency_in_days: 1,
+          installments_paid: 0,
+          tokens: [
+            {
+              name: "Ethereum",
+              amount: 1500000000000000000000,
+              installment_amount: 10000000000000000000,
+              decimals: 18,
+              symbol: "ETH",
+            },
+            {
+              name: "Bitcoin (Wrapped)",
+              amount: 100000000000000000000,
+              installment_amount: 100000000000000000,
+              decimals: 18,
+              symbol: "BTC",
+            },
+            {
+              name: "Circle USD",
+              amount: 1000000000000000000,
+              installment_amount: 100000000000000,
+              decimals: 10,
+              symbol: "USDC",
+            },
+          ],
+          id: 0,
+          owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        },
+      ];
+      setTrusts(newTrusts);
+    } catch (error) {
+      console.log(error);
+      setTrusts([]);
     }
-
-    const resolved = await Promise.all(promises);
-    const newTrusts = resolved.map((metadataURI) => {
-      const metadata = JSON.parse(atob(metadataURI.split(",")[1]));
-      return metadata;
-    });
-    setTrusts(newTrusts);
   }, [contract]);
 
   useEffect(() => {
