@@ -201,8 +201,9 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     }
 
     const resolved = await Promise.all(promises);
-    const newTrusts = resolved.map((metadataURI) => {
+    const newTrusts = resolved.map((metadataURI, id) => {
       const metadata = JSON.parse(atob(metadataURI.split(",")[1]));
+      metadata.id = id;
       return metadata;
     });
     setTrusts(newTrusts);
