@@ -7,6 +7,7 @@ import { BigNumber, ethers } from "ethers";
 import { hexToDecimal, truncateAddress } from "../utils/utility";
 import OIOTrust_abi from "../abi/OIOTrust.json";
 import ERC20_abi from "../abi/IERC20.json";
+import { LoadingOverlay } from "@mantine/core";
 
 interface Web3ProviderProps {
   children?: React.ReactNode;
@@ -53,6 +54,7 @@ export const Web3Context = React.createContext<Web3ContextType>({});
 export function Web3Provider({ children }: Web3ProviderProps) {
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>();
   const [wallet, setWallet] = useState<WalletType>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const providerOptions = {
@@ -217,6 +219,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
   ) => {
     if (!contract) return;
     try {
+      setIsLoading(true);
       const tx = await contract.createTrust(
         recipient,
         startTime + "",
@@ -228,6 +231,8 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     } catch (e) {
       console.log(e);
       genericErrorNotify(e, "Error creating trust", false);
+    } finally {
+      setIsLoading(false);
     }
   };
   const depositToken = async (
@@ -238,6 +243,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
   ) => {
     if (!contract || !wallet) return;
     try {
+      setIsLoading(true);
       const tokenContract = new ethers.Contract(
         erc20Address,
         ERC20_abi.abi,
@@ -260,6 +266,8 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     } catch (e) {
       console.log(e);
       genericErrorNotify(e, "Error depositing token", false);
+    } finally {
+      setIsLoading(false);
     }
   };
   const withdrawToken = async (
@@ -269,6 +277,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
   ) => {
     if (!contract || !wallet) return;
     try {
+      setIsLoading(true);
       const tx = await contract.withdraw(
         tokenId.toString(),
         erc20Address,
@@ -280,6 +289,8 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     } catch (e) {
       console.log(e);
       genericErrorNotify(e, "Error withdrawing token", false);
+    } finally {
+      setIsLoading(false);
     }
   };
   const updateTrust = async (
@@ -289,6 +300,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
   ) => {
     if (!contract) return;
     try {
+      setIsLoading(true);
       const tx = await contract.createTrust(
         trustId,
         startTime + "",
@@ -300,6 +312,8 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     } catch (e) {
       console.log(e);
       genericErrorNotify(e, "Error updating trust", false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -315,6 +329,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         updateTrust,
         trusts,
       }}>
+      <LoadingOverlay visible={isLoading} overlayColor="black" />
       {children}
     </Web3Context.Provider>
   );
