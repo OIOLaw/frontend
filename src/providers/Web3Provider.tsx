@@ -1,10 +1,11 @@
 import React, { Children, useEffect, useState } from "react";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { notify } from "../utils/notify";
+import { genericErrorNotify, notify } from "../utils/notify";
 import { BaseProvider } from "@ethersproject/providers";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { hexToDecimal, truncateAddress } from "../utils/utility";
+import OIOTrust_abi from "../abi/OIOTrust.json";
 
 interface Web3ProviderProps {
   children?: React.ReactNode;
@@ -21,6 +22,9 @@ interface WalletType {
 interface Web3ContextType {
   connectWallet?: () => void;
   disconnectWallet?: () => void;
+  createTrust?: () => void;
+  depositToken?: () => void;
+  loadTrusts?: () => Promise<any[]>;
   wallet?: WalletType;
 }
 
@@ -140,8 +144,94 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     };
   }, [web3Modal, wallet]);
 
+  const [contract, setContract] = useState<ethers.Contract>();
+
+  useEffect(() => {
+    if (wallet) {
+      try {
+        const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ?? "";
+        const newContract = new ethers.Contract(
+          contractAddress,
+          OIOTrust_abi.abi,
+          wallet.library.getSigner(wallet.address)
+        );
+        setContract(newContract);
+        console.log(newContract);
+      } catch (e: any) {
+        genericErrorNotify(e, "Contract Not Found", false);
+      }
+    }
+
+    return () => {
+      setContract(undefined);
+    };
+  }, [wallet]);
+
+  const loadTrusts = async () => {
+    if (!contract) return;
+    const count = await contract.totalSupply();
+
+    // For each trust, get the details
+    const promises = [];
+    for (let i = 0; i < count; i++) {
+      promises.push(contract.tokenURI(i));
+    }
+
+    const resolved = await Promise.all(promises);
+    return resolved.map((metadataURI) => {
+      console.log(atob(metadataURI.split(",")[1]));
+      const metadata = JSON.parse(atob(metadataURI.split(",")[1]));
+      return {
+        metadata,
+      };
+    });
+  };
+  const createTrust = async () => {
+    if (!contract) return;
+    try {
+      const tx = await contract.createTrust(
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        Math.floor(new Date().getTime() / 1000) * 60 * 60 * 24 * 7,
+        "1"
+      );
+      await tx.wait();
+      notify("Success", "Trust created successfully!", "success");
+    } catch (e) {
+      console.log(e);
+      genericErrorNotify(e, "Error creating trust", false);
+    }
+  };
+  const depositToken = async () => {
+    if (!contract) return;
+    try {
+      const tokenId = 0;
+      const erc20Address = "";
+      const amount = "";
+      const installmentAmount = "";
+      const tx = await contract.deposit(
+        tokenId,
+        erc20Address,
+        amount,
+        installmentAmount
+      );
+      await tx.wait();
+      notify("Success", "Token deposited successfully!", "success");
+    } catch (e) {
+      console.log(e);
+      genericErrorNotify(e, "Error depositing token", false);
+    }
+  };
+
   return (
-    <Web3Context.Provider value={{ wallet, connectWallet, disconnectWallet }}>
+    <Web3Context.Provider
+      value={{
+        wallet,
+        connectWallet,
+        disconnectWallet,
+        createTrust,
+        depositToken,
+        loadTrusts,
+      }}>
       {children}
     </Web3Context.Provider>
   );
