@@ -23,8 +23,22 @@ interface WalletType {
 interface Web3ContextType {
   connectWallet?: () => void;
   disconnectWallet?: () => void;
-  createTrust?: () => void;
-  depositToken?: () => void;
+  createTrust?: (
+    recipient: string,
+    startTime: number,
+    frequencyInDays: number
+  ) => void;
+  depositToken?: (
+    tokenId: number,
+    erc20Address: string,
+    amount: number,
+    installmentAmount: number
+  ) => void;
+  updateTrust?: (
+    trustId: string,
+    startTime: number,
+    frequencyInDays: number
+  ) => void;
   trusts?: any[];
   wallet?: WalletType;
 }
@@ -192,13 +206,17 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     loadTrusts();
   }, [loadTrusts, contract]);
 
-  const createTrust = async () => {
+  const createTrust = async (
+    recipient: string,
+    startTime: number,
+    frequencyInDays: number
+  ) => {
     if (!contract) return;
     try {
       const tx = await contract.createTrust(
-        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-        Math.floor(new Date().getTime() / 1000) * 60 * 60 * 24 * 7,
-        "1"
+        recipient,
+        startTime + "",
+        frequencyInDays + ""
       );
       await tx.wait();
       notify("Success", "Trust created successfully!", "success");
@@ -208,13 +226,14 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       genericErrorNotify(e, "Error creating trust", false);
     }
   };
-  const depositToken = async () => {
+  const depositToken = async (
+    tokenId: number,
+    erc20Address: string,
+    amount: number,
+    installmentAmount: number
+  ) => {
     if (!contract || !wallet) return;
     try {
-      const tokenId = 0;
-      const erc20Address = "0x0dcd1bf9a1b36ce34237eeafef220932846bcd82";
-      const amount = 1e18;
-      const installmentAmount = 1e17;
       const tokenContract = new ethers.Contract(
         erc20Address,
         ERC20_abi.abi,
@@ -239,6 +258,26 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       genericErrorNotify(e, "Error depositing token", false);
     }
   };
+  const updateTrust = async (
+    trustId: string,
+    startTime: number,
+    frequencyInDays: number
+  ) => {
+    if (!contract) return;
+    try {
+      const tx = await contract.createTrust(
+        trustId,
+        startTime + "",
+        frequencyInDays + ""
+      );
+      await tx.wait();
+      notify("Success", "Trust updated successfully!", "success");
+      loadTrusts();
+    } catch (e) {
+      console.log(e);
+      genericErrorNotify(e, "Error updating trust", false);
+    }
+  };
 
   return (
     <Web3Context.Provider
@@ -248,6 +287,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         disconnectWallet,
         createTrust,
         depositToken,
+        updateTrust,
         trusts,
       }}>
       {children}

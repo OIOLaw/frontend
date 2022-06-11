@@ -32,10 +32,27 @@ const Home: NextPage = () => {
               <Code>{wallet.address}</Code>
             </Box>
 
-            <Button onClick={() => createTrust?.call(this)}>
+            <Button
+              onClick={() =>
+                createTrust?.call(
+                  this,
+                  "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+                  Math.floor(new Date().getTime() / 1000) * 60 * 60 * 24 * 7,
+                  1
+                )
+              }>
               Create a new trust
             </Button>
-            <Button onClick={() => depositToken?.call(this)}>
+            <Button
+              onClick={() =>
+                depositToken?.call(
+                  this,
+                  0,
+                  "0x0dcd1bf9a1b36ce34237eeafef220932846bcd82",
+                  1e18,
+                  1e17
+                )
+              }>
               Deposit a token
             </Button>
 
