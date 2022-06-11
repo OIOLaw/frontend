@@ -1,34 +1,27 @@
-import { AppShell, Button, Code } from "@mantine/core";
-import type { NextPage } from "next";
+import type {NextPage} from "next";
 import Head from "next/head";
-import Image from "next/image";
-import { useWeb3 } from "../src/providers/Web3Provider";
+import Layout from '../src/components/Layout'
 
 const Home: NextPage = () => {
-  const { connectWallet, wallet } = useWeb3();
-  return (
-    <>
-      <Head>
-        <title>OIOLaw</title>
-        <meta name="description" content="" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <AppShell>
-        {wallet ? (
-          <>
-            <Button onClick={() => connectWallet?.call(this)}>
-              Disconnect
-            </Button>
-            <Code>{wallet.address}</Code>
-          </>
-        ) : (
-          <Button onClick={() => connectWallet?.call(this)}>
-            Connect Wallet
-          </Button>
-        )}
-      </AppShell>
-    </>
-  );
+
+    return (
+        <>
+            <Head>
+                <title>OIOLaw</title>
+                <meta name="description" content=""/>
+                <link rel="icon" href="/favicon.ico"/>
+            </Head>
+            <Layout>
+                TODO:
+                {/*    TODO: Add Create Trust button and link to /create */}
+
+                {/*    TODO: NOT connected? "connect wallet to proceed". */}
+
+                {/*    TODO: connected? && !trusts[] print "you have no trusts. Start by creating one. */}
+                {/*    TODO: connected? && trusts[]? display list of trusts, with an update trust button */}
+            </Layout>
+        </>
+    );
 };
 
 export default Home;

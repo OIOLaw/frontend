@@ -1,27 +1,13 @@
-import React, { Children, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { notify } from "../utils/notify";
-import { BaseProvider } from "@ethersproject/providers";
 import { ethers } from "ethers";
-
+import {Web3ContextType, WalletType } from '../types/wallet'
 interface Web3ProviderProps {
   children?: React.ReactNode;
 }
 
-interface WalletType {
-  network: ethers.providers.Network; // Current network
-  provider: BaseProvider; // Provider
-  chainId: number; // Current chain ID (decimal)
-  library: ethers.providers.Web3Provider; // Web3Provider library
-  address: string; // Address of this wallet (i.e. account)
-}
-
-interface Web3ContextType {
-  connectWallet?: () => void;
-  disconnectWallet?: () => void;
-  wallet?: WalletType;
-}
 
 export const Web3Context = React.createContext<Web3ContextType>({});
 
