@@ -14,6 +14,7 @@ import { useWeb3 } from "../providers/Web3Provider";
 import { truncateAddress } from "../utils/utility";
 import { AlertCircle } from "tabler-icons-react";
 import AddressDisplay from "./AddressDisplay";
+import Link from "next/link";
 
 const Header: FC = () => {
   const { connectWallet, disconnectWallet, wallet } = useWeb3();
