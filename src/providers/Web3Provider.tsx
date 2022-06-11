@@ -1,5 +1,4 @@
 import React, { Children, useCallback, useEffect, useState } from "react";
-import React, { useEffect, useState } from "react";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { genericErrorNotify, notify } from "../utils/notify";
