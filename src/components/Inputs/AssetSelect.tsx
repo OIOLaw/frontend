@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React, {FC, useState} from 'react';
 import { MultiSelect } from '@mantine/core';
 
-export function AssetSelect() {
+interface IAssetSelect {
+    setSelectedTokens: React.Dispatch<React.SetStateAction<string[]>>
+}
+const AssetSelect: FC<IAssetSelect> = ({ setSelectedTokens }) => {
     // TODO: state
     // TODO: display AmountInput component for every field Selected
-
-    const [fields, setFields] = useState(['WETH', 'DAI', 'USDC']);
 
     return (
         <MultiSelect
             placeholder="Select assets"
-            data={fields}
+            data={['WETH', 'DAI', 'USDC']}
             searchable
             creatable={false}
             nothingFound="Nothing found..."
+            onChange={setSelectedTokens}
         />
     );
 }
+
+export default AssetSelect;
