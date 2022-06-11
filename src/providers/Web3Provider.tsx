@@ -179,11 +179,8 @@ export function Web3Provider({ children }: Web3ProviderProps) {
 
     const resolved = await Promise.all(promises);
     return resolved.map((metadataURI) => {
-      console.log(atob(metadataURI.split(",")[1]));
       const metadata = JSON.parse(atob(metadataURI.split(",")[1]));
-      return {
-        metadata,
-      };
+      return metadata;
     });
   };
   const createTrust = async () => {

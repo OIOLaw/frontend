@@ -48,7 +48,8 @@ const Home: NextPage = () => {
             {trusts
               ?.filter(
                 (metadata) =>
-                  metadata.creator.toLowerCase() == wallet.address.toLowerCase()
+                  metadata?.creator?.toLowerCase() ==
+                  wallet?.address?.toLowerCase()
               )
               .map((metadata, i) => (
                 <Box key={i}>
