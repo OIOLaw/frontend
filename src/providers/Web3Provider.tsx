@@ -66,7 +66,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
 
     const newWeb3Modal = new Web3Modal({
       cacheProvider: true,
-      network: "mainnet",
+      network: "goerli",
       providerOptions,
       theme: "dark",
     });
