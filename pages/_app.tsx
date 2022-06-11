@@ -1,6 +1,7 @@
 import type { AppProps } from "next/app";
 import { MantineProvider } from "@mantine/core";
 import { Web3Provider } from "../src/providers/Web3Provider";
+import { NotificationsProvider } from "@mantine/notifications";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -11,7 +12,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         theme={{
           colorScheme: "dark",
         }}>
-        <Component {...pageProps} />
+        <NotificationsProvider>
+          <Component {...pageProps} />
+        </NotificationsProvider>
       </MantineProvider>
     </Web3Provider>
   );

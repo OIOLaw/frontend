@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useWeb3 } from "../src/providers/Web3Provider";
 
 const Home: NextPage = () => {
-  const { connectWallet, wallet } = useWeb3();
+  const { connectWallet, disconnectWallet, wallet } = useWeb3();
   return (
     <>
       <Head>
@@ -16,7 +16,7 @@ const Home: NextPage = () => {
       <AppShell>
         {wallet ? (
           <>
-            <Button onClick={() => connectWallet?.call(this)}>
+            <Button onClick={() => disconnectWallet?.call(this)}>
               Disconnect
             </Button>
             <Code>{wallet.address}</Code>
