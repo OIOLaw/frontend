@@ -303,15 +303,15 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       if (allowance < amount) {
         const tx1 = await tokenContract.approve(
           contract.address,
-          amount.toString()
+          amount.toLocaleString("fullwide", { useGrouping: false })
         );
         await tx1.wait();
       }
       const tx2 = await contract.deposit(
         tokenId.toString(),
         erc20Address,
-        amount.toString(),
-        installmentAmount.toString()
+        amount.toLocaleString("fullwide", { useGrouping: false }),
+        installmentAmount.toLocaleString("fullwide", { useGrouping: false })
       );
       await tx2.wait();
       notify("Success", "Token deposited successfully!", "success");
@@ -334,7 +334,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       const tx = await contract.withdraw(
         tokenId.toString(),
         erc20Address,
-        amount.toString()
+        amount.toLocaleString("fullwide", { useGrouping: false })
       );
       await tx.wait();
       notify("Success", "Token withdrawn successfully!", "success");
