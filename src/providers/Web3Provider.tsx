@@ -201,6 +201,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
       }
       const resolveMetadata = promises.map(async (metadataURI, id) => {
         const returnedURI = await metadataURI;
+        console.log(atob(returnedURI.split(",")[1]));
         const metadata = JSON.parse(atob(returnedURI.split(",")[1]));
         metadata.id = id;
         metadata.owner = await contract.ownerOf(id);
