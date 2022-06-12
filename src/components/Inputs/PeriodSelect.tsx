@@ -10,9 +10,11 @@ const data = [
 interface IPeriodSelect {
     setSelectedPeriod: React.Dispatch<React.SetStateAction<'days' | 'months' | 'years'>>
     setFrequency: React.Dispatch<React.SetStateAction<number>>
+    selectedFrequency?: number
+    selectedPeriod?: string
 }
 
-const PeriodSelect: FC<IPeriodSelect> = ({setSelectedPeriod, setFrequency}) => {
+const PeriodSelect: FC<IPeriodSelect> = ({setSelectedPeriod, setFrequency, selectedFrequency, selectedPeriod}) => {
 
     const select = (
         <NativeSelect
@@ -26,6 +28,8 @@ const PeriodSelect: FC<IPeriodSelect> = ({setSelectedPeriod, setFrequency}) => {
             }}
             onChange={(event) => setSelectedPeriod(event.currentTarget.value as 'days' | 'months' | 'years')
             }
+            value={selectedPeriod}
+            defaultValue={'days'}
         />
     );
 
@@ -37,6 +41,7 @@ const PeriodSelect: FC<IPeriodSelect> = ({setSelectedPeriod, setFrequency}) => {
             rightSection={select}
             rightSectionWidth={92}
             onChange={event => setFrequency(parseInt(event.currentTarget.value))}
+            value={selectedFrequency}
         />
     );
 }

@@ -3,10 +3,9 @@ import { MultiSelect } from '@mantine/core';
 
 interface IAssetSelect {
     setSelectedTokens: React.Dispatch<React.SetStateAction<string[]>>
+    selectedTokens?: string[]
 }
-const AssetSelect: FC<IAssetSelect> = ({ setSelectedTokens }) => {
-    // TODO: state
-    // TODO: display AmountInput component for every field Selected
+const AssetSelect: FC<IAssetSelect> = ({ selectedTokens, setSelectedTokens }) => {
 
     return (
         <MultiSelect
@@ -16,6 +15,7 @@ const AssetSelect: FC<IAssetSelect> = ({ setSelectedTokens }) => {
             creatable={false}
             nothingFound="Nothing found..."
             onChange={setSelectedTokens}
+            value={selectedTokens}
         />
     );
 }
