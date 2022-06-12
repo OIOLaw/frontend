@@ -6,16 +6,17 @@ import {useValidatedState} from "@mantine/hooks";
 
 
 interface IAmountInput {
-    selectedToken: string
-    setSelectedAmounts: React.Dispatch<React.SetStateAction<{ [token:string]: number } | {}>>
-    selectedAmounts: { [token:string]: number } | {}
+    selectedToken: string;
+    setSelectedAmounts: React.Dispatch<React.SetStateAction<{ [token:string]: number } | {}>>;
+    selectedAmounts: { [token:string]: number } | {};
+    installment?: boolean;
 }
 
-const AmountInput: FC<IAmountInput> = ({selectedToken,setSelectedAmounts, selectedAmounts }) => {
+const AmountInput: FC<IAmountInput> = ({selectedToken, setSelectedAmounts, selectedAmounts, installment }) => {
     return (
         <Box style={{ marginTop: 10 }}>
             <TextInput
-                placeholder={`${selectedToken} amount`}
+                placeholder={installment ? `${selectedToken} amount` : `${selectedToken} amount per installment`}
                 required
                 onChange={(event) => (setSelectedAmounts({...selectedAmounts, [selectedToken]: parseInt(event.currentTarget.value)}))}
                 mt="md"

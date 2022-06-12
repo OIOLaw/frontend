@@ -28,7 +28,7 @@ interface Web3ContextType {
     recipient: string,
     startTime: number,
     frequencyInDays: number
-  ) => void;
+  ) => Promise<number | void>;
   depositToken?: (
     tokenId: number,
     erc20Address: string,
@@ -68,7 +68,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
 
     const newWeb3Modal = new Web3Modal({
       cacheProvider: true,
-      network: "goerli",
+      network: "ropsten",
       providerOptions,
       theme: "dark",
     });
@@ -177,7 +177,6 @@ export function Web3Provider({ children }: Web3ProviderProps) {
           wallet.library.getSigner(wallet.address)
         );
         setContract(newContract);
-        console.log(newContract);
       } catch (e: any) {
         genericErrorNotify(e, "Contract Not Found", false);
       }
@@ -207,8 +206,8 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         metadata.owner = await contract.ownerOf(id);
         return metadata;
       });
-      // const newTrusts = await Promise.all(resolveMetadata);
-      const newTrusts = [
+      const newTrusts = await Promise.all(resolveMetadata);
+      /*const newTrusts = [
         {
           creator: "0xcdbc5b7f658687e6ace363ee3dff9a71a97f3fd3",
           start_time: 1655386777,
@@ -240,7 +239,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
           id: 0,
           owner: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
         },
-      ];
+      ];*/
       setTrusts(newTrusts);
     } catch (error) {
       console.log(error);
@@ -265,9 +264,16 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         startTime + "",
         frequencyInDays + ""
       );
-      await tx.wait();
+      const txId = await tx.wait();
       notify("Success", "Trust created successfully!", "success");
       loadTrusts();
+      if (txId) {
+        console.log(
+          txId.events.find((it: any) => it.event === "Transfer").args.tokenId
+        );
+        return txId.events.find((it: any) => it.event === "Transfer").args
+          .tokenId;
+      }
     } catch (e) {
       console.log(e);
       genericErrorNotify(e, "Error creating trust", false);
@@ -289,11 +295,17 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         ERC20_abi.abi,
         wallet.library.getSigner(wallet.address)
       );
-      const tx1 = await tokenContract.approve(
-        contract.address,
-        amount.toString()
+      const allowance = await tokenContract.allowance(
+        wallet.address,
+        contract.address
       );
-      await tx1.wait();
+      if (allowance.lt(amount)) {
+        const tx1 = await tokenContract.approve(
+          contract.address,
+          amount.toString()
+        );
+        await tx1.wait();
+      }
       const tx2 = await contract.deposit(
         tokenId.toString(),
         erc20Address,
@@ -341,7 +353,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
     if (!contract) return;
     try {
       setIsLoading(true);
-      const tx = await contract.createTrust(
+      const tx = await contract.updateTrust(
         trustId,
         startTime + "",
         frequencyInDays + ""

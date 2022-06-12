@@ -8,11 +8,13 @@ const data = [
 ];
 
 interface IPeriodSelect {
+    selectedPeriod: 'days' | 'months' | 'years';
+    frequency: number;
     setSelectedPeriod: React.Dispatch<React.SetStateAction<'days' | 'months' | 'years'>>
     setFrequency: React.Dispatch<React.SetStateAction<number>>
 }
 
-const PeriodSelect: FC<IPeriodSelect> = ({setSelectedPeriod, setFrequency}) => {
+const PeriodSelect: FC<IPeriodSelect> = ({selectedPeriod, frequency, setSelectedPeriod, setFrequency}) => {
 
     const select = (
         <NativeSelect
@@ -24,6 +26,7 @@ const PeriodSelect: FC<IPeriodSelect> = ({setSelectedPeriod, setFrequency}) => {
                     borderBottomLeftRadius: 0,
                 },
             }}
+            value={selectedPeriod}
             onChange={(event) => setSelectedPeriod(event.currentTarget.value as 'days' | 'months' | 'years')
             }
         />
@@ -31,11 +34,13 @@ const PeriodSelect: FC<IPeriodSelect> = ({setSelectedPeriod, setFrequency}) => {
 
     return (
         <TextInput
-            type="text"
+            type="number"
             placeholder="How frequent?"
             // label="Select period"
             rightSection={select}
             rightSectionWidth={92}
+            value={frequency}
+            min={1}
             onChange={event => setFrequency(parseInt(event.currentTarget.value))}
         />
     );

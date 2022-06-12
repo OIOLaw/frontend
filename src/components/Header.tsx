@@ -60,12 +60,12 @@ const Header: FC = () => {
           </Group>
         </Container>
       </Box>
-      {wallet?.network?.name && wallet?.network?.name !== "goerli" && (
+      {wallet?.network?.name && wallet?.network?.name !== "ropsten" && (
         <Alert
           icon={<AlertCircle size={16} />}
           title="Wrong network"
           color="red">
-          Please switch to Goerli testchain.
+          Please switch to Ropsten testchain.
         </Alert>
       )}
     </>
