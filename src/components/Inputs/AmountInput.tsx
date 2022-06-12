@@ -1,8 +1,9 @@
 import React, {FC, useState} from 'react'
-import {Box, Text} from "@mantine/core";
+import {Box, Text, Image} from "@mantine/core";
 import { TextInput, createStyles } from '@mantine/core';
 import {string} from "prop-types";
 import {useValidatedState} from "@mantine/hooks";
+import {tokenAddresses} from "../../constants/contractAddresses";
 
 
 interface IAmountInput {
@@ -16,13 +17,13 @@ const AmountInput: FC<IAmountInput> = ({selectedToken, setSelectedAmounts, selec
     return (
         <Box style={{ marginTop: 10 }}>
             <TextInput
-                placeholder={installment ? `${selectedToken} amount` : `${selectedToken} amount per installment`}
+                placeholder={installment ? `${selectedToken} total amount` : `${selectedToken} amount per installment`}
                 required
                 onChange={(event) => (setSelectedAmounts({...selectedAmounts, [selectedToken]: parseInt(event.currentTarget.value)}))}
                 mt="md"
                 autoComplete="nope"
-                rightSection={(<Box pr='lg'> {selectedToken} </Box>)}
-                rightSectionWidth={50}
+                rightSection={(<Image sx={{borderRadius:'25px'}} mr='lg' alt={selectedToken} src={tokenAddresses[selectedToken].image}/>)}
+                rightSectionWidth={40}
                 type={"number"}
             />
         </Box>

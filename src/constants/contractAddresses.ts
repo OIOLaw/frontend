@@ -1,11 +1,36 @@
 import { ethers } from "ethers";
 import contractConstants from "./contractConstants";
 
-export const tokenAddresses = {
-  WETH: "0x3f3fcc84ae7069fe4048f67dc02158ba10399242",
-  DAI: "0x2bced6862b72ec4421f6c7412c040cec1364c043",
-  USDC: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-};
+export const tokenAddresses: { [token: string]: { address: string, image: string } } = {
+    "WETH": {
+        address: "0x3f3fcc84ae7069fe4048f67dc02158ba10399242",
+        image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/2396.png'
+    },
+    "DAI": {
+        address: "0x2bced6862b72ec4421f6c7412c040cec1364c043",
+        image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/4943.png'
+    },
+    "USDC": {
+        address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+        image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png'
+    },
+    "WBTC": {
+        address: "0xa46dd1a3bf123fa6976c563acb432b533581eceb",
+        image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png'
+    },
+    "UNI": {
+        address: "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984",
+        image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/7083.png'
+    },
+    "MAKER": {
+        address: "0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2",
+        image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1518.png'
+    },
+    'MATIC': {
+        address: "0x7d1afa7b718fb893db30a3abc0cfc608aacfebb0",
+        image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png'
+    }
+}
 
 // write addresses here, or read them from environment
 const contractAddresses: Readonly<{

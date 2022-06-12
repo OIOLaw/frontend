@@ -9,20 +9,17 @@ const AssetSelect: FC<IAssetSelect> = ({
   selectedTokens,
   setSelectedTokens,
 }) => {
-  // TODO: state
-  // TODO: display AmountInput component for every field Selected
 
-  return (
-    <MultiSelect
-      placeholder="Select assets"
-      data={["WETH", "DAI", "USDC"]}
-      searchable
-      creatable={false}
-      nothingFound="Nothing found..."
-      value={selectedTokens}
-      onChange={setSelectedTokens}
-    />
-  );
-};
+    return (
+        <MultiSelect
+            placeholder="Select assets"
+            data={['WETH','WBTC', 'DAI', 'USDC', 'MATIC', 'UNI', 'MAKER']}
+            searchable={true}
+            nothingFound="Nothing found..."
+            onChange={setSelectedTokens}
+            clearButtonLabel="Clear selection"
+        />
+    );
+}
 
 export default AssetSelect;
