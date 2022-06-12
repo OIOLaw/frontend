@@ -61,7 +61,7 @@ const CreatePage: FC = () => {
         trustId,
         tokenAddress.address,
         amount * 10 ** 18,
-        selectedInstallmentAmounts[token]
+        selectedInstallmentAmounts[token] * 10 ** 18
       );
     }
   };

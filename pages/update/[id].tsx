@@ -101,7 +101,7 @@ const UpdatePage: NextPage = () => {
           trust.id,
           tokenAddress.address,
           amount * 10 ** 18 - currentAmount,
-          selectedInstallmentAmounts[token]
+          selectedInstallmentAmounts[token] * 10 ** 18
         );
       } else if (amount < currentAmount) {
         await withdrawToken?.call(
