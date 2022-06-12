@@ -99,7 +99,7 @@ const UpdatePage: NextPage = () => {
         await depositToken?.call(
           this,
           trust.id,
-          tokenAddress,
+          tokenAddress.address,
           amount * 10 ** 18 - currentAmount,
           selectedInstallmentAmounts[token]
         );
