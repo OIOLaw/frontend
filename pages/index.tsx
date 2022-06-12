@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       metadata?.creator?.toLowerCase() == wallet?.address?.toLowerCase()
   );
 
-  return (
+    return (
     <>
       <Layout>
         {wallet ? (

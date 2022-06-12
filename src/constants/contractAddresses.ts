@@ -2,7 +2,7 @@ import { ethers } from "ethers";
 import contractConstants from "./contractConstants";
 
 export const tokenAddresses: { [token: string]: { address: string, image: string } } = {
-    "WETH": {
+    "wETH": {
         address: "0x3f3fcc84ae7069fe4048f67dc02158ba10399242",
         image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/2396.png'
     },
@@ -14,7 +14,7 @@ export const tokenAddresses: { [token: string]: { address: string, image: string
         address: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3408.png'
     },
-    "WBTC": {
+    "wBTC": {
         address: "0xa46dd1a3bf123fa6976c563acb432b533581eceb",
         image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png'
     },

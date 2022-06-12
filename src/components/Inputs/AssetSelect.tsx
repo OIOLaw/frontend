@@ -13,7 +13,7 @@ const AssetSelect: FC<IAssetSelect> = ({
     return (
         <MultiSelect
             placeholder="Select assets"
-            data={['WETH','WBTC', 'DAI', 'USDC', 'MATIC', 'UNI', 'MAKER']}
+            data={['wETH','wBTC', 'DAI', 'USDC', 'MATIC', 'UNI', 'MAKER']}
             searchable={true}
             nothingFound="Nothing found..."
             onChange={setSelectedTokens}

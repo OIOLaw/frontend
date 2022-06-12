@@ -1,43 +1,13 @@
-import { Box, Code, ThemeIcon, Tooltip } from "@mantine/core";
-import { useClipboard } from "@mantine/hooks";
+import { Image } from "@mantine/core";
 import { FC } from "react";
-import {
-  Coin,
-  CurrencyBitcoin,
-  CurrencyDogecoin,
-  CurrencyDollar,
-  CurrencyEthereum,
-  CurrencyKroneDanish,
-  CurrencyLitecoin,
-} from "tabler-icons-react";
-import { truncateAddress } from "../utils/utility";
+import {tokenAddresses} from "../constants/contractAddresses";
 
 const TokenIcon: FC<{ symbol: string }> = ({ symbol }) => {
-  const currencies = [
-    {
-      icon: <CurrencyBitcoin />,
-      symbol: "BTC",
-      color: "yellow",
-    },
-    {
-      icon: <CurrencyEthereum />,
-      symbol: "ETH",
-      color: "blue",
-    },
-    {
-      icon: <CurrencyDollar />,
-      symbol: "USDC",
-      color: "orange",
-    },
-  ];
-  const currency = currencies.filter((it) => it.symbol === symbol)[0] ?? {
-    icon: <Coin />,
-    color: "yellow",
+  const currency = tokenAddresses[symbol] ?? {
+    image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3717.png',
   };
   return (
-    <ThemeIcon radius="xl" size="md" color={currency.color}>
-      {currency.icon}
-    </ThemeIcon>
+    <Image height={'25px'} alt={currency.address} src={currency.image}/>
   );
 };
 
