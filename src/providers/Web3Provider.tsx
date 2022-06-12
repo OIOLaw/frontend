@@ -299,7 +299,7 @@ export function Web3Provider({ children }: Web3ProviderProps) {
         wallet.address,
         contract.address
       );
-      if (allowance.lt(amount)) {
+      if (allowance < amount) {
         const tx1 = await tokenContract.approve(
           contract.address,
           amount.toString()
