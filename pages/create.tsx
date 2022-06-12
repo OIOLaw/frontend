@@ -59,7 +59,7 @@ const CreatePage: FC = () => {
       await depositToken?.call(
         this,
         trustId,
-        tokenAddress,
+        tokenAddress.address,
         amount * 10 ** 18,
         selectedInstallmentAmounts[token]
       );
