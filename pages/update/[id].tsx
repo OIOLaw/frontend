@@ -107,7 +107,7 @@ const UpdatePage: NextPage = () => {
         await withdrawToken?.call(
           this,
           trust.id,
-          tokenAddress,
+          tokenAddress.address,
           currentAmount - amount * 10 ** 18
         );
       }
